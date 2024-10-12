@@ -7,6 +7,7 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
     toDos: [],
     inputValue: "",
   });
+  const [editClickCount, setEditClickCount] = useState(0);
   const [isEditted, setIsEditted] = useState("");
 
   function handleInputChange(e) {
@@ -79,16 +80,13 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
     let taskInput;
 
     taskInput = document.createElement("input");
-
     taskInput.type = "text";
     taskInput.value = toDoItem.textContent;
     taskInput.className = "editInput";
+
+    
     toDoItem.style.display = "none";
     toDoItem.parentNode.insertBefore(taskInput, toDoItem.nextSibling);
-
-     if (taskInput.type === "text") {
-       taskInput.select(); 
-     }
 
     taskInput.addEventListener("change", () => {
       setIsEditted(taskInput.value);
@@ -125,6 +123,11 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
         </form>
         <h4>All the tasks!</h4>
 
+        {/* <ToDoCounter toDoList={toDoList} /> */}
+        {/* <Count
+          stateVariable={this.state.todos}
+          handleChildCallBack={this.handleChildCallBack}
+        /> */}
 
         <ul>
           {toDoList.toDos.map((todo, index) => (

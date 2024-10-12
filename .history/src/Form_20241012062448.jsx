@@ -7,7 +7,8 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
     toDos: [],
     inputValue: "",
   });
-  const [isEditted, setIsEditted] = useState("");
+  const [editClickCount, setEditClickCount] = useState(0);
+  const [isEditted, setIsEditted] = useState(false);
 
   function handleInputChange(e) {
     setTodoList((prevState) => ({
@@ -44,29 +45,11 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
     }
   }
 
-  function handleItemResubmit(e,index) {
-    let editBtn = e.target;
-    let taskInput = document.querySelector(".editInput");
-    console.log(isEditted);
-    taskInput.value = isEditted;
-
-    let itemToDo = toDoList.toDos[index];
-
-    toDoList.toDos[index] = isEditted;
-
-    const deleteBtn = editBtn.previousElementSibling;
-    const toDoItem = deleteBtn.previousElementSibling;
-
-    let itemElement = toDoItem.previousElementSibling;
-    itemElement.textContent = isEditted;
-
-    itemElement.style.display = "block";
-
-    taskInput.remove();
-
-    editBtn.textContent = "Edit";
-    console.log(itemElement);
-  }
+  // function handleItemDisplay(e) {
+  //   const deleteBtn = document.querySelector(".deleteBtn");
+  //   const toDoList = deleteBtn.previousElementSibling;
+  //   console.log(toDoList);
+  // }
 
   function handleInputEditDisplay(e) {
     const editBtn = e.target;
@@ -79,33 +62,34 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
     let taskInput;
 
     taskInput = document.createElement("input");
-
     taskInput.type = "text";
     taskInput.value = toDoItem.textContent;
     taskInput.className = "editInput";
     toDoItem.style.display = "none";
     toDoItem.parentNode.insertBefore(taskInput, toDoItem.nextSibling);
 
-     if (taskInput.type === "text") {
-       taskInput.select(); 
-     }
-
-    taskInput.addEventListener("change", () => {
-      setIsEditted(taskInput.value);
-      console.log(taskInput.value);
-    });
-    console.log(taskInput.value);
+    taskInput.addEventListener("change" {taskInput.value});
+    console.log(taskInput);
 
     editBtn.textContent = "Resubmit";
   }
 
   function handleEdit(e, index, todo) {
     let editBtn = e.target;
+    console.log(editBtn);
 
     if (editBtn.textContent === "Edit") {
       handleInputEditDisplay(e);
     } else if (editBtn.textContent === "Resubmit") {
-      handleItemResubmit(e, index);
+      console.log("Am getting index from this todo!");
+
+      let taskInput = document.querySelector(".editInput");
+
+      taskInput.addEventListener("change", () => console.log(taskInput.value));
+      console.log(taskInput);
+
+      let itemToDo = toDoList.toDos[index];
+      console.log(itemToDo);
     }
   }
 
@@ -125,14 +109,27 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
         </form>
         <h4>All the tasks!</h4>
 
+        {/* <ToDoCounter toDoList={toDoList} /> */}
+        {/* <Count
+          stateVariable={this.state.todos}
+          handleChildCallBack={this.handleChildCallBack}
+        /> */}
 
         <ul>
           {toDoList.toDos.map((todo, index) => (
             <div className="itemContainer" data-index={index} key={todo}>
-              <li className="todoListEl" data-list={todo}>
-                {" "}
-                {todo}
-              </li>
+              {isEditted ? (
+                <input
+                  className="editInput"
+                  value={toDoList.inputValue}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <li className="todoListEl" data-list={todo}>
+                  {" "}
+                  {todo}
+                </li>
+              )}
 
               <button
                 className="deleteBtn"

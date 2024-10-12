@@ -125,6 +125,7 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
         </form>
         <h4>All the tasks!</h4>
 
+        {/* <ToDoCounter toDoList={toDoList} /> */}
 
         <ul>
           {toDoList.toDos.map((todo, index) => (

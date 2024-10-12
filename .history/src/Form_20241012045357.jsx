@@ -2,12 +2,14 @@ import { useState } from "react";
 import ToDoCounter from "./Counter.jsx";
 // import PropTypes from "prop-types";
 
+
 export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
   const [toDoList, setTodoList] = useState({
     toDos: [],
     inputValue: "",
   });
-  const [isEditted, setIsEditted] = useState("");
+  const [editClickCount, setEditClickCount] = useState(0);
+  const [isEditted, setIsEditted] = useState(false);
 
   function handleInputChange(e) {
     setTodoList((prevState) => ({
@@ -44,69 +46,50 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
     }
   }
 
-  function handleItemResubmit(e,index) {
-    let editBtn = e.target;
-    let taskInput = document.querySelector(".editInput");
-    console.log(isEditted);
-    taskInput.value = isEditted;
+  // function handleItemDisplay(e) {
+  //   const deleteBtn = document.querySelector(".deleteBtn");
+  //   const toDoList = deleteBtn.previousElementSibling;
+  //   console.log(toDoList);
+  // }
 
-    let itemToDo = toDoList.toDos[index];
+   function handleInputEditDisplay(e) {
+      const editBtn = e.target;
 
-    toDoList.toDos[index] = isEditted;
+      
+      const deleteBtn = editBtn.previousElementSibling;
+      const toDoItem = deleteBtn.previousElementSibling;
+      console.log(toDoItem);
+      console.log(toDoItem.textContent);
 
-    const deleteBtn = editBtn.previousElementSibling;
-    const toDoItem = deleteBtn.previousElementSibling;
+      let taskInput;
 
-    let itemElement = toDoItem.previousElementSibling;
-    itemElement.textContent = isEditted;
+      taskInput = document.createElement("input");
+      taskInput.type = "text";
+      taskInput.value = toDoItem.textContent;
+      taskInput.onChange = { handleInputChange };
 
-    itemElement.style.display = "block";
+      toDoItem.style.display = "none";
+      toDoItem.parentNode.insertBefore(taskInput, toDoItem.nextSibling);
 
-    taskInput.remove();
+      console.log(taskInput);
 
-    editBtn.textContent = "Edit";
-    console.log(itemElement);
-  }
+          editBtn.textContent = "Resubmit";
 
-  function handleInputEditDisplay(e) {
-    const editBtn = e.target;
 
-    const deleteBtn = editBtn.previousElementSibling;
-    const toDoItem = deleteBtn.previousElementSibling;
-    console.log(toDoItem);
-    console.log(toDoItem.textContent);
-
-    let taskInput;
-
-    taskInput = document.createElement("input");
-
-    taskInput.type = "text";
-    taskInput.value = toDoItem.textContent;
-    taskInput.className = "editInput";
-    toDoItem.style.display = "none";
-    toDoItem.parentNode.insertBefore(taskInput, toDoItem.nextSibling);
-
-     if (taskInput.type === "text") {
-       taskInput.select(); 
-     }
-
-    taskInput.addEventListener("change", () => {
-      setIsEditted(taskInput.value);
-      console.log(taskInput.value);
-    });
-    console.log(taskInput.value);
-
-    editBtn.textContent = "Resubmit";
-  }
+   
+   }
 
   function handleEdit(e, index, todo) {
-    let editBtn = e.target;
+const editBtn = e.target;
 
-    if (editBtn.textContent === "Edit") {
-      handleInputEditDisplay(e);
-    } else if (editBtn.textContent === "Resubmit") {
-      handleItemResubmit(e, index);
-    }
+if(editBtn.textContent === 'Edit')
+ {
+   handleInputEditDisplay(e);
+
+ } else 
+
+
+   
   }
 
   return (
@@ -125,14 +108,27 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
         </form>
         <h4>All the tasks!</h4>
 
+        {/* <ToDoCounter toDoList={toDoList} /> */}
+        {/* <Count
+          stateVariable={this.state.todos}
+          handleChildCallBack={this.handleChildCallBack}
+        /> */}
 
         <ul>
           {toDoList.toDos.map((todo, index) => (
             <div className="itemContainer" data-index={index} key={todo}>
-              <li className="todoListEl" data-list={todo}>
-                {" "}
-                {todo}
-              </li>
+              {isEditted ? (
+                <input
+                  className="editInput"
+                  value={toDoList.inputValue}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <li className="todoListEl" data-list={todo}>
+                  {" "}
+                  {todo}
+                </li>
+              )}
 
               <button
                 className="deleteBtn"
@@ -147,7 +143,7 @@ export default function Form({ increaseToDos, decreaseToDos, onTodoCount }) {
                 data-edit={todo}
                 onClick={(e) => handleEdit(e, index, todo)}
               >
-                Edit
+             Edit
               </button>
             </div>
           ))}
